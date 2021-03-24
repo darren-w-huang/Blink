@@ -1,0 +1,30 @@
+{
+  "name": "Blink",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0"
+  },
+  "engines": {
+    "node": "14.14.0",
+    "npm": "*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/darren-w-huang/Blink.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/darren-w-huang/Blink/issues"
+  },
+  "homepage": "https://github.com/darren-w-huang/Blink#readme",
+  "description": ""
+}

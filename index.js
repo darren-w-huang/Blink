@@ -20,4 +20,4 @@ client.on('message', msg => {
 });
 
 // console.log()
-client.login(process.env.TOKEN)
+client.login(process.env.TOKEN);
