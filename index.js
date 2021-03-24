@@ -8,8 +8,8 @@ dotenv.config();
 const announcement_user = 'Placeholder';
 
 client.on('ready', () => {
-	console.log(`Logged in as ${client.user.tag}!`);
 	console.log(`Logged in as ${client.user.id}!`);
+	console.log('New welcome message!');
 });
 
 client.on('message', msg => {
