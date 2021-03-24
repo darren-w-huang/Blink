@@ -19,7 +19,5 @@ client.on('message', msg => {
 
 });
 
-
-
-
-client.login('ODI0MzA4NDMxNjI3MzU0MTUz.YFtfDQ.NOy--T7004KBFgP03QJHCQGl4Ss');
+// console.log()
+client.login(process.env.TOKEN)
