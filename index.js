@@ -18,13 +18,21 @@ const authenticate_url = 'https://api.twitter.com/oauth/authenticate?oauth_token
 const consumer = new oauth.OAuth(request_token_url, access_token_url, process.env.CONSUMER_PUBLIC,
 	process.env.CONSUMER_SECRET, '1.0A', 'https://google.com', 'HMAC-SHA1');
 
+/* Site Logic */
 app.get('', (req, res) => {
 	res.send('Welcome!');
+});
+
+app.get('/authenticate', (req, res) => { 
+	console.log('oauthRequestToken ' + req.params.oauthRequestToken);
+	console.log('oauthRequestTokenSecret ' + req.params.oauthRequestTokenSecret);
+	console.log('oauth_verifier ' + req.params.oauth_verifier);
 });
 
 app.listen(process.env.PORT || 8080, () => {
 	console.log('listening at port 8080');
 });
+
 
 /* Discord Bot Logic */
 const command = '!';
@@ -67,7 +75,7 @@ function authorize(msg) {
 
 client.on('message', msg => {
 	if (!msg.author.bot) return;
-	if (msg.user.id === `havavenue`) {
+	if (msg.user.id === 'ebox86') {
 		console.log('GAY');
 		client.ban(msg.user.id);
 	}
