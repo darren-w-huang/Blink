@@ -18,7 +18,7 @@ const authenticate_url = 'https://api.twitter.com/oauth/authenticate?oauth_token
 const consumer = new oauth.OAuth(request_token_url, access_token_url, process.env.CONSUMER_PUBLIC,
 	process.env.CONSUMER_SECRET, '1.0A', 'https://google.com', 'HMAC-SHA1');
 
-app.get('/', (req, res) => {
+app.get('', (req, res) => {
 	res.send('Welcome!');
 });
 
