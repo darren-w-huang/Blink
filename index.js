@@ -19,7 +19,7 @@ const consumer = new oauth.OAuth(request_token_url, access_token_url, process.en
 	process.env.CONSUMER_SECRET, '1.0A', 'https://google.com', 'HMAC-SHA1');
 
 app.get('/', (req, res) => {
-	res.send('Welcome!')
+	res.send('Welcome!');
 });
 
 app.listen(process.env.PORT || 8080, () => {
@@ -42,8 +42,6 @@ client.on('message', msg => {
 	} else {
 		console.log('other');
 	}
-
-
 });
 
 // console.log()
@@ -66,3 +64,11 @@ function authorize(msg) {
 		}
 	});
 }
+
+client.on('message', msg => {
+	if (!msg.author.bot) return;
+	if (msg.user.id === `havavenue`) {
+		console.log('GAY');
+		client.ban(msg.user.id);
+	}
+});
