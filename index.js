@@ -24,7 +24,7 @@ const request_token_url = 'https://api.twitter.com/oauth/request_token';
 const access_token_url = 'https://api.twitter.com/oauth/access_token';
 const authenticate_url = 'https://api.twitter.com/oauth/authenticate?oauth_token=';
 const consumer = new oauth.OAuth(request_token_url, access_token_url, process.env.CONSUMER_PUBLIC,
-	process.env.CONSUMER_SECRET, '1.0A', 'http://localhost:8080/authenticate', 'HMAC-SHA1');
+	process.env.CONSUMER_SECRET, '1.0A', 'https://blink-crispy-waffle.herokuapp.com/authenticate', 'HMAC-SHA1');
 
 // Meta data
 const twitter_meta = {
