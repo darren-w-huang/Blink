@@ -25,7 +25,7 @@ const request_token_url = 'https://api.twitter.com/oauth/request_token';
 const access_token_url = 'https://api.twitter.com/oauth/access_token';
 const authenticate_url = 'https://api.twitter.com/oauth/authenticate?oauth_token=';
 const consumer = new oauth.OAuth(request_token_url, access_token_url, process.env.CONSUMER_PUBLIC,
-	process.env.CONSUMER_SECRET, '1.0A', 'http://localhost:8080/authenticate', 'HMAC-SHA1');
+	process.env.CONSUMER_SECRET, '1.0A', 'https://blink-crispy-waffle.herokuapp.com/authenticate/', 'HMAC-SHA1');
 
 // Meta data
 const twitter_meta = {
@@ -79,6 +79,7 @@ app.listen(process.env.PORT || 8080, () => {
 
 /* Discord Bot Logic */
 const command = '!';
+const max_tweet_length = 280;
 
 // store meta data for discord and twitter
 const discord_meta = {
@@ -114,6 +115,10 @@ client.on('message', msg => {
 		// Include any attachments
 		for (const attachment of msg.attachments) {
 			body += ' ' + attachment[1].attachment;
+		} 
+		if (body.length > max_tweet_length) {
+			channel.send('Tweet is too long. Could not send.');
+			return;
 		}
 		const tweet = twitter_client.post('statuses/update', {
 			status: body, // msg contains all the meta data, we want only the content
