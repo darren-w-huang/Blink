@@ -98,17 +98,14 @@ client.on('message', msg => {
 	if (msg.author.bot) return;
 	// Supports verification and tweeting for a single channel
 	const channel = msg.channel;
-	if (msg.content.includes `${command}`) {
-		if (msg.content === `${command}authorize`) {
+	
+	if (msg.content === `${command}authorize`) {
 			authorize(msg);
-		} else if (authorized_channel(msg) && msg.content === `${command}delete`) {
+	} else if (authorized_channel(msg) && msg.content === `${command}delete`) {
 			remove_tweet(); // Deletes most recent tweet. Only works once
-		} else if (msg.content === `${command}help`) {
+	} else if (authorized_channel(msg) && msg.content === `${command}help`) {
 			channel.send(`${command}authorize to verify, or ${command}delete to remove your most recent tweet.\n` +
 			'delete will remove only one tweet, even if called multiple times in succession');
-		} else {
-			channel.send('invalid command');
-		}
 	} else if (authorized_channel(msg)) { // General case: send a tweet
 		const twitter_client = twitter_meta.twitter_client;
 		var body = msg.content;
