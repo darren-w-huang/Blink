@@ -1,4 +1,6 @@
-/* eslint-disable brace-style */
+/*
+Blink is a Discord bot that allows any non-bot messages to be tweeted in channels that are monitored by the bot.
+*/
 
 // Requirements
 const Discord = require('discord.js');
@@ -7,14 +9,14 @@ const oauth = require('oauth');
 const express = require('express');
 const Twitter = require('twitter-lite');
 const app = express();
-// var discord = require('./functions');
 
 const client = new Discord.Client();
 dotenv.config();
 
 /* Verified Users
 ---------------------
-Currently not in use 
+Feature currently disabled. 
+All users who post in channels monitored by the bot, once a twitter account is verified, will be sent as tweets.
 // const verified_users = [];
 // const pending_users = [];
 // const MAX_PENDING_STARTUP = 20;
@@ -68,7 +70,6 @@ app.get('/authenticate', (req, res) => {
 				.then(_ => {
 					client.channels.cache.get(discord_meta.channel_id).send('Verified!');
 				}).catch(console.error);
-
 		}
 	});
 });
@@ -90,9 +91,6 @@ const discord_meta = {
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.id}!`);
 	console.log('New welcome message!');
-	// while (pending_users.length > MAX_PENDING_STARTUP) {
-	// 	pending_users.shift();
-	// }
 });
 
 // Message handling
@@ -100,15 +98,17 @@ client.on('message', msg => {
 	if (msg.author.bot) return;
 	// Supports verification and tweeting for a single channel
 	const channel = msg.channel;
-	const user = msg.author.id;
-
-	if (msg.content === `${command}authorize`) {
-		// if (verified_users.includes(user)) {
-		// 	user.send('Already verified');
-		// }
-		authorize(msg);
-	} else if (authorized_channel(msg) && msg.content === `${command}delete`) {
-		remove_tweet(); // Deletes most recent tweet. Only works once
+	if (msg.content.includes `${command}`) {
+		if (msg.content === `${command}authorize`) {
+			authorize(msg);
+		} else if (authorized_channel(msg) && msg.content === `${command}delete`) {
+			remove_tweet(); // Deletes most recent tweet. Only works once
+		} else if (msg.content === `${command}help`) {
+			channel.send(`${command}authorize to verify, or ${command}delete to remove your most recent tweet.\n` +
+			'delete will remove only one tweet, even if called multiple times in succession');
+		} else {
+			channel.send('invalid command');
+		}
 	} else if (authorized_channel(msg)) { // General case: send a tweet
 		const twitter_client = twitter_meta.twitter_client;
 		var body = msg.content;
@@ -116,33 +116,26 @@ client.on('message', msg => {
 		for (const attachment of msg.attachments) {
 			body += ' ' + attachment[1].attachment;
 		} 
-		if (body.length > max_tweet_length) {
+		if (body.length > max_tweet_length) { // Alert user when tweet fails from max length
 			channel.send('Tweet is too long. Could not send.');
 			return;
 		}
 		const tweet = twitter_client.post('statuses/update', {
 			status: body, // msg contains all the meta data, we want only the content
 		}).then(res => {
-			// console.log('Successful tweet');
-			// console.log('Tweet id:', res.id_str);
 			twitter_meta.last_tweet_id = res.id_str;
 		}).catch((e) => {
 			console.log('error when tweeting:', console.error(e));
 			channel.send('Error when tweeting');
 		});
-	} else if (msg.content === `${command}help`) {
-		channel.send(`${command}authorize to verify, or ${command}delete to remove your most recent tweet.\n` +
-		'delete will remove only one tweet, even if called multiple times in succession');
-
-	}
-	// console.log('Nonsense');
-
+	} 
 	discord_meta.channel_id = msg.channel.id;
 	discord_meta.channel_name = msg.channel_name;
 });
 
+/* Directly messages the user a link to verify that they want the bot to have access 
+   to their twitter account. Any non-bot messages in channels monitored by the bot will be tweeted. */
 function authorize(msg) {
-	// msg.reply(`You said ${msg.content}`);
 	consumer.getOAuthRequestToken((err, token, token_secret, _) => {
 		if (err) {
 			console.log(err);
@@ -155,6 +148,7 @@ function authorize(msg) {
 	});
 }
 
+/* Removes only one tweet, specifically the previous one, even if called multiple times in succession. */
 function remove_tweet() {
 	const twitter_client = twitter_meta.twitter_client;
 	const channel = client.channels.cache.get(discord_meta.channel_id);
@@ -168,6 +162,7 @@ function remove_tweet() {
 		});
 }
 
+// Checks that channel id matches the authorized channel
 function authorized_channel(msg) {
 	return msg.channel.id === discord_meta.channel_id && twitter_meta.twitter_client != null;
 }
